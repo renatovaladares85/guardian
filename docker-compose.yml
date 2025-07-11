@@ -1,0 +1,338 @@
+version: '3.8'
+
+services:
+  # Aplicação Principal Guardian
+  guardian_app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: guardian_app
+    restart: always
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/apache/apache.conf:/etc/apache2/sites-available/000-default.conf
+      - app_storage:/var/www/html/storage
+      - app_cache:/var/www/html/bootstrap/cache
+      - app_logs:/var/log/apache2
+    ports:
+      - "8000:80"
+    depends_on:
+      guardian_db:
+        condition: service_healthy
+      guardian_redis:
+        condition: service_healthy
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+      - DB_CONNECTION=pgsql
+      - DB_HOST=guardian_db
+      - DB_PORT=5432
+      - DB_DATABASE=guardian_db
+      - DB_USERNAME=guardian_user
+      - DB_PASSWORD=guardian_secure_pass
+      - REDIS_HOST=guardian_redis
+      - REDIS_PORT=6379
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=guardian_mail
+      - MAIL_PORT=1025
+      - SESSION_DRIVER=redis
+      - CACHE_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health-check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - guardian_network
+
+  # Banco de Dados PostgreSQL
+  guardian_db:
+    image: postgres:15-alpine
+    container_name: guardian_db
+    restart: always
+    environment:
+      POSTGRES_DB: guardian_db
+      POSTGRES_USER: guardian_user
+      POSTGRES_PASSWORD: guardian_secure_pass
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_logs:/var/log/postgresql
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/backups:/backups
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U guardian_user -d guardian_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - guardian_network
+
+  # Redis para Cache e Sessões
+  guardian_redis:
+    image: redis:7-alpine
+    container_name: guardian_redis
+    restart: always
+    command: redis-server --appendonly yes --requirepass guardian_redis_pass
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - redis_logs:/var/log/redis
+    environment:
+      - REDIS_PASSWORD=guardian_redis_pass
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "guardian_redis_pass", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - guardian_network
+
+  # MailHog para desenvolvimento
+  guardian_mail:
+    image: mailhog/mailhog:latest
+    container_name: guardian_mail
+    restart: always
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    volumes:
+      - mail_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8025"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardian_network
+
+  # Nginx para proxy reverso e load balancing
+  guardian_nginx:
+    image: nginx:alpine
+    container_name: guardian_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - nginx_logs:/var/log/nginx
+      - ssl_certs:/etc/ssl/certs
+    depends_on:
+      - guardian_app
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/nginx-health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardian_network
+
+  # Monitoramento com Watchtower
+  guardian_watchtower:
+    image: containrrr/watchtower
+    container_name: guardian_watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - watchtower_logs:/logs
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=300
+      - WATCHTOWER_INCLUDE_STOPPED=true
+      - WATCHTOWER_NOTIFICATIONS=email
+      - WATCHTOWER_NOTIFICATION_EMAIL_FROM=watchtower@guardian.local
+      - WATCHTOWER_NOTIFICATION_EMAIL_TO=admin@guardian.local
+    command: --interval 300 --cleanup
+    networks:
+      - guardian_network
+
+  # Backup automático do banco
+  guardian_backup:
+    image: postgres:15-alpine
+    container_name: guardian_backup
+    restart: "no"
+    volumes:
+      - postgres_data:/source_data:ro
+      - ./database/backups:/backups
+      - ./docker/scripts/backup.sh:/backup.sh
+    environment:
+      - PGPASSWORD=guardian_secure_pass
+      - POSTGRES_HOST=guardian_db
+      - POSTGRES_DB=guardian_db
+      - POSTGRES_USER=guardian_user
+    command: /bin/sh -c "chmod +x /backup.sh && /backup.sh"
+    depends_on:
+      - guardian_db
+    networks:
+      - guardian_network
+
+  # Monitoramento de saúde dos containers
+  guardian_healthcheck:
+    image: alpine:latest
+    container_name: guardian_healthcheck
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./docker/scripts/healthcheck.sh:/healthcheck.sh
+      - healthcheck_logs:/logs
+    command: /bin/sh -c "apk add --no-cache docker-cli curl && chmod +x /healthcheck.sh && /healthcheck.sh"
+    networks:
+      - guardian_network
+
+  # Banco de dados de teste
+  guardian_test_db:
+    image: postgres:15-alpine
+    container_name: guardian_test_db
+    restart: always
+    environment:
+      POSTGRES_DB: guardian_test_db
+      POSTGRES_USER: guardian_test_user
+      POSTGRES_PASSWORD: guardian_test_pass
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U guardian_test_user -d guardian_test_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardian_network
+
+  # Redis de teste
+  guardian_test_redis:
+    image: redis:7-alpine
+    container_name: guardian_test_redis
+    restart: always
+    command: redis-server --appendonly yes
+    ports:
+      - "6380:6379"
+    volumes:
+      - test_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardian_network
+
+volumes:
+  # Volumes persistentes para dados principais
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/data/postgres
+  
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/data/redis
+  
+  # Volumes para logs persistentes
+  postgres_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/logs/postgres
+  
+  redis_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/logs/redis
+  
+  nginx_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/logs/nginx
+  
+  app_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/logs/app
+  
+  # Volumes para aplicação
+  app_storage:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./storage
+  
+  app_cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./bootstrap/cache
+  
+  # Volumes para backup e monitoramento
+  mail_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/data/mail
+  
+  ssl_certs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/ssl
+  
+  watchtower_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/logs/watchtower
+  
+  healthcheck_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/logs/healthcheck
+  
+  # Volumes para ambiente de teste
+  test_postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/data/test_postgres
+  
+  test_redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/data/test_redis
+
+networks:
+  guardian_network:
+    driver: bridge
