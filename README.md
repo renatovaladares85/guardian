@@ -173,10 +173,48 @@ docker-compose exec guardian_db pg_isready -U guardian_user
 - **Email**: suporte@guardian.com  
 - **Docs**: Sempre atualizadas neste repositório
 
-## 📄 Licença
+## 📄 Licença e Direitos Autorais
 
-MIT License - veja [LICENSE](LICENSE) para detalhes.
+### 🛡️ Propriedade Intelectual
+**© 2025 Renato Valadares - Todos os direitos reservados**
+
+- **Autor**: Renato Valadares (renatovaladares85@gmail.com)
+- **Sistema**: Guardian - Sistema de Gestão Empresarial
+- **Versão**: 1.0.0
+- **Data**: Julho 2025
+
+### 📋 Termos de Uso
+
+Este software é propriedade exclusiva de **Renato Valadares** e está protegido por direitos autorais.
+
+#### ✅ **Permitido:**
+- Uso para fins comerciais e pessoais
+- Instalação em múltiplos servidores
+- Backup e arquivamento
+- Configuração e personalização de interface
+
+#### ❌ **Proibido:**
+- **Modificação do código fonte**
+- **Redistribuição ou revenda**
+- **Engenharia reversa**
+- **Criação de trabalhos derivados**
+- **Remoção de créditos autorais**
+
+#### 🔒 **Proteção e Segurança:**
+- Código fonte criptografado em produção
+- Validação de integridade automática
+- Logs de auditoria completos
+- Proteção contra acesso direto a arquivos
+
+### 📞 **Contato e Suporte**
+- **Email**: renatovaladares85@gmail.com
+- **GitHub**: https://github.com/renatovaladares85
+- **Projeto**: https://github.com/renatovaladares85/guardian
+
+### ⚖️ **Aviso Legal**
+O uso deste software implica na aceitação integral destes termos. 
+Violações podem resultar em ações legais.
 
 ---
 
-**Guardian** - Gestão empresarial moderna e eficiente! 🛡️
+**Guardian** - Sistema proprietário desenvolvido por Renato Valadares 🛡️

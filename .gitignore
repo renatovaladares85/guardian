@@ -1,0 +1,374 @@
+# ========================================
+# Guardian - .gitignore
+# Sistema de Gestão Empresarial
+# ========================================
+
+# ========================================
+# ARQUIVOS SENSÍVEIS E CONFIGURAÇÕES
+# ========================================
+
+# Variáveis de ambiente (CRÍTICO - NUNCA COMMITAR)
+.env
+.env.local
+.env.production
+.env.staging
+.env.testing
+.env.backup
+.env.*
+
+# Arquivos de configuração com senhas
+config/database.php.local
+config/mail.php.local
+config/redis.php.local
+config/app.php.local
+
+# Chaves de criptografia e certificados
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+storage/app/keys/
+storage/certificates/
+
+# Arquivos de backup que podem conter dados sensíveis
+*.sql
+*.dump
+*.backup
+database/backups/*.sql
+database/backups/*.gz
+database/backups/*.zip
+
+# ========================================
+# LARAVEL ESPECÍFICO
+# ========================================
+
+# Cache do Laravel
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitkeep
+/storage/framework/cache/data/*
+!/storage/framework/cache/data/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+
+# Logs do Laravel
+/storage/logs/*.log
+/storage/logs/*.txt
+!/storage/logs/.gitkeep
+
+# Arquivos temporários do Laravel
+/storage/app/temp/*
+/storage/app/tmp/*
+/storage/app/uploads/temp/*
+
+# Cache de configuração
+/bootstrap/cache/config.php
+/bootstrap/cache/packages.php
+/bootstrap/cache/services.php
+/bootstrap/cache/routes-v7.php
+
+# ========================================
+# DEPENDÊNCIAS E VENDOR
+# ========================================
+
+# Composer
+/vendor/
+composer.lock
+auth.json
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+package-lock.json
+yarn.lock
+
+# ========================================
+# DOCKER E INFRAESTRUTURA
+# ========================================
+
+# Dados persistentes do Docker
+/docker/data/
+/docker/volumes/
+/docker/postgres/data/
+/docker/redis/data/
+/docker/mysql/data/
+
+# Logs do Docker
+/docker/logs/
+docker-compose.override.yml
+docker-compose.local.yml
+docker-compose.production.local.yml
+
+# Volumes e bind mounts
+/storage/docker/
+/database/docker-data/
+
+# Arquivos de ambiente Docker específicos
+.dockerignore.local
+Dockerfile.local
+docker-compose.*.local.yml
+
+# ========================================
+# UPLOADS E MÍDIA
+# ========================================
+
+# Uploads de usuários
+/storage/app/public/uploads/*
+!/storage/app/public/uploads/.gitkeep
+/storage/app/avatars/*
+!/storage/app/avatars/.gitkeep
+/storage/app/attachments/*
+!/storage/app/attachments/.gitkeep
+
+# Arquivos temporários de upload
+/storage/app/temp-uploads/
+/public/uploads/temp/
+
+# Imagens e documentos grandes
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.zip
+*.rar
+*.tar.gz
+
+# Exceções para assets do sistema
+!/public/img/logo.png
+!/public/img/favicon.ico
+!/resources/img/
+!/docs/img/
+
+# ========================================
+# DESENVOLVIMENTO
+# ========================================
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.buildpath
+.settings/
+
+# Arquivos de debug
+.phpunit.result.cache
+.php_cs.cache
+.php-cs-fixer.cache
+coverage/
+coverage.xml
+phpunit.xml.bak
+
+# Arquivos temporários de desenvolvimento
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================================
+# SISTEMA OPERACIONAL
+# ========================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ========================================
+# LOGS E MONITORAMENTO
+# ========================================
+
+# Logs de aplicação
+/storage/logs/
+logs/
+*.log
+error.log
+access.log
+debug.log
+laravel.log
+
+# Logs de sistema
+/var/log/
+nginx-*.log
+apache-*.log
+
+# Métricas e relatórios
+/storage/reports/
+/storage/metrics/
+/storage/analytics/
+
+# ========================================
+# TESTES E QA
+# ========================================
+
+# Coverage e relatórios de teste
+/tests/coverage/
+/coverage/
+phpunit.xml
+.phpunit.result.cache
+.php_cs.cache
+
+# Dados de teste
+/tests/fixtures/uploads/
+/tests/temp/
+/database/testing.sqlite
+
+# ========================================
+# BACKUP E SEGURANÇA
+# ========================================
+
+# Backups automáticos
+backup/
+backups/
+*.backup
+*.bak
+*.old
+
+# Dumps de banco de dados
+database_dump_*.sql
+guardian_backup_*.sql
+*.dump.sql
+
+# Arquivos de segurança
+security/
+/storage/security/
+audit_*.log
+
+# ========================================
+# CACHE E TEMPORÁRIOS
+# ========================================
+
+# Cache geral
+cache/
+.cache/
+tmp/
+temp/
+
+# Cache do Composer
+.composer/
+
+# Cache do npm/yarn
+.npm/
+.yarn/
+
+# ========================================
+# CONFIGURAÇÕES LOCAIS
+# ========================================
+
+# Configurações específicas do desenvolvedor
+.local/
+local/
+.personal/
+developer.conf
+
+# Sobrescritas locais
+*.local.php
+*.dev.php
+*_local.*
+
+# ========================================
+# PRODUÇÃO
+# ========================================
+
+# Arquivos de deploy
+deploy.log
+deployment/
+releases/
+
+# Certificados SSL/TLS de produção
+ssl/
+certificates/
+*.crt
+*.key
+*.pem
+
+# ========================================
+# FERRAMENTAS DE BUILD
+# ========================================
+
+# Webpack
+/public/hot
+/public/storage
+/public/mix-manifest.json
+
+# Laravel Mix
+/public/css/
+/public/js/
+mix-manifest.json
+
+# Vite
+/public/build/
+.vite/
+
+# ========================================
+# DOCUMENTAÇÃO TEMPORÁRIA
+# ========================================
+
+# Documentação gerada automaticamente
+/docs/api/generated/
+/docs/coverage/
+/docs/phpdoc/
+
+# Arquivos temporários de documentação
+*.md.backup
+*.md.tmp
+
+# ========================================
+# FINAL - ARQUIVOS ESPECÍFICOS
+# ========================================
+
+# Arquivos específicos do Guardian que nunca devem ser commitados
+guardian_production.conf
+guardian_staging.conf
+production_keys/
+staging_keys/
+
+# Scripts de produção com credenciais
+scripts/production/
+scripts/deploy_prod.sh
+scripts/backup_prod.sh
+
+# Configurações específicas de cliente
+client_config/
+customer_data/

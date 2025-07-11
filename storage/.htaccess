@@ -1,0 +1,27 @@
+# ===============================================================================
+# GUARDIAN - PROTEÇÃO STORAGE
+# © 2025 Renato Valadares - Todos os direitos reservados
+# ===============================================================================
+
+# NEGAR TODO ACESSO AO DIRETÓRIO STORAGE
+Require all denied
+
+# Bloquear todos os tipos de arquivo
+<FilesMatch ".*">
+    Require all denied
+</FilesMatch>
+
+# Desabilitar execução de scripts
+Options -ExecCGI
+RemoveHandler .php .phtml .php3 .php4 .php5 .php6 .pl .py .jsp .asp .sh .cgi
+
+# Headers de proteção
+<IfModule mod_headers.c>
+    Header always set X-Copyright "© 2025 Renato Valadares - Guardian System"
+    Header always set X-Access "Private Storage - Access Denied"
+</IfModule>
+
+# ===============================================================================
+# AVISO: Área privada do sistema
+# Contém dados sensíveis protegidos por direitos autorais
+# ===============================================================================

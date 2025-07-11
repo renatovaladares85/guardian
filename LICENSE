@@ -1,0 +1,71 @@
+LICENÇA DE USO - GUARDIAN SISTEMA DE GESTÃO EMPRESARIAL
+
+Copyright © 2025 Renato Valadares. Todos os direitos reservados.
+
+===============================================================================
+
+TERMOS E CONDIÇÕES DE USO
+
+1. PROPRIEDADE INTELECTUAL
+   Este software e toda a documentação associada são propriedade exclusiva de 
+   Renato Valadares (renatovaladares85@gmail.com). Todos os direitos, títulos 
+   e interesses no software permanecem com o autor.
+
+2. CONCESSÃO DE LICENÇA
+   O autor concede ao usuário uma licença limitada, não exclusiva e 
+   intransferível para usar o software nas seguintes condições:
+
+   2.1 USO PERMITIDO:
+   - Instalação e uso em ambiente comercial ou pessoal
+   - Execução em múltiplos servidores
+   - Backup para fins de segurança
+   - Configuração de interface e personalização visual
+
+   2.2 USO PROIBIDO:
+   - Modificação, alteração ou adaptação do código fonte
+   - Redistribuição, sublicenciamento ou venda
+   - Engenharia reversa, descompilação ou desmontagem
+   - Criação de trabalhos derivados
+   - Remoção ou alteração de avisos de direitos autorais
+
+3. PROTEÇÕES DE SEGURANÇA
+   O software inclui mecanismos de proteção que:
+   - Impedem acesso direto a arquivos sensíveis
+   - Validam a integridade do código
+   - Registram tentativas de modificação
+   - Protegem dados e configurações
+
+4. RESPONSABILIDADES DO USUÁRIO
+   O usuário compromete-se a:
+   - Manter a confidencialidade do sistema
+   - Não tentar burlar proteções de segurança
+   - Reportar vulnerabilidades ao autor
+   - Usar o software conforme os termos desta licença
+
+5. GARANTIAS E LIMITAÇÕES
+   5.1 O software é fornecido "como está", sem garantias de qualquer tipo
+   5.2 O autor não se responsabiliza por danos diretos ou indiretos
+   5.3 O usuário assume todos os riscos do uso do software
+
+6. VIOLAÇÃO DE LICENÇA
+   A violação desta licença resultará em:
+   - Revogação imediata dos direitos de uso
+   - Possível ação legal para proteção dos direitos autorais
+   - Responsabilidade por danos e custos legais
+
+7. CONTATO E SUPORTE
+   Para questões sobre esta licença ou suporte técnico:
+   - Email: renatovaladares85@gmail.com
+   - GitHub: https://github.com/renatovaladares85
+
+8. JURISDIÇÃO
+   Esta licença é regida pelas leis brasileiras e qualquer disputa será 
+   resolvida nos tribunais competentes do Brasil.
+
+===============================================================================
+
+AVISO: O uso deste software implica na aceitação integral destes termos.
+
+Data: Julho 2025
+Autor: Renato Valadares
+Sistema: Guardian v1.0.0

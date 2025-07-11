@@ -1,0 +1,23 @@
+# ===============================================================================
+# GUARDIAN - PROTEÇÃO RAIZ
+# © 2025 Renato Valadares - Todos os direitos reservados
+# ===============================================================================
+
+# ACESSO NEGADO A ESTE DIRETÓRIO
+Require all denied
+
+# Bloquear acesso a todos os arquivos do diretório raiz
+<FilesMatch ".*">
+    Require all denied
+</FilesMatch>
+
+# Headers de proteção
+<IfModule mod_headers.c>
+    Header always set X-Copyright "© 2025 Renato Valadares - Guardian System"
+    Header always set X-Access "Forbidden - Proprietary Software"
+</IfModule>
+
+# ===============================================================================
+# AVISO: Acesso não autorizado é crime
+# Lei 9.609/98 - Proteção da Propriedade Intelectual de Programa de Computador
+# ===============================================================================
